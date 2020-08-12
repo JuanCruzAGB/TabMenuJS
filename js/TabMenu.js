@@ -1,6 +1,5 @@
 import { Tab } from './Tab.js';
 import { Content } from './Content.js';
-import { Sidebar } from './Sidebar.js';
 
 /**
  * * TavMenu makes an excellent tab menu.
@@ -16,15 +15,10 @@ export class TabMenu{
      */
     constructor(properties = {
         id: 'tab-1',
-        sidebar: {
-            state: false,
-        },
     }, states = {
         open: [],
     }){
         // TODO Edit custom errors.
-        // TODO Create custom dropdown.
-        // TODO Create custom sidebar.
         this.setProperties(properties);
         this.setStates(states);
         this.setHTML();
@@ -99,7 +93,7 @@ export class TabMenu{
      */
     setContents(){
         this.contents = [];
-        let contents = document.querySelectorAll('.tab-menu > .tab-content-list > .tab-content');
+        let contents = document.querySelectorAll('.tab-menu .tab-content-list .tab-content');
         for(const content of contents){
             this.contents.push(new Content(content));
         }
@@ -111,9 +105,26 @@ export class TabMenu{
      */
     setTabs(){
         this.tabs = [];
-        let tabs = document.querySelectorAll('.tab-menu > .tab-menu-list > li > .tab-link');
+        let tabs = document.querySelectorAll('.tab-menu .tab-menu-list .tab-button');
         for(const tab of tabs){
-            this.tabs.push(new Tab(tab, this.contents));
+            this.tabs.push(new Tab(tab, this.contents, this));
+        }
+    }
+
+    /**
+     * * Close all the Contents and Tabs.
+     * @memberof TabMenu
+     */
+    closeAll(){
+        for(const tab of this.tabs){
+            if(tab.states.open){
+                tab.close();
+            }
+        }
+        for(const content of this.contents){
+            if(content.states.open){
+                content.close();
+            }
         }
     }
 
@@ -122,8 +133,10 @@ export class TabMenu{
      * @memberof NavMenu
      */
     checkOpenedTab(){
-        for(const name of this.states.open){
-            Tab.open(name, this.tabs);
+        if(this.states.open.length){
+            for(const target of this.states.open){
+                Tab.checkOpened(target, this.tabs, this.contents);
+            }
         }
     }
 }

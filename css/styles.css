@@ -1,0 +1,80 @@
+.tab-menu{
+    --color-one: #222; /* * Titles */
+    --color-two: #222; /* * Buttons */
+    --color-two-alternative: #000; /* * Buttons efects */
+    --color-three: #fff; /* * Background */
+    --color-three-alternative: #ddd; /* * Background efects */
+    --color-four: #ddd; /* * Borders efects */
+    --color-four-alternative: #ddd; /* * Borders efects */
+    --color-five: #ddd; /* * Icons */
+    --color-five-alternative: #ddd; /* * Icons efects */
+    --shadow-color: #32B1DA;
+}
+
+.tab-menu .tabs .tab .tab-link{
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    height: 2.3rem;
+    line-height: 2.3rem;
+    text-decoration: none;
+    color: var(--color-two);
+    transition: 500ms;
+}
+
+.tab-menu .tabs .tab .tab-link:hover,
+.tab-menu .tabs .tab .tab-link.active{
+    color: var(--color-two-alternative);
+}
+
+.tab-menu .tabs .tab .tab-link .link-icon{
+    color: var(--color-five);
+    margin-right: .5rem;
+}
+
+.tab-menu .link-icon{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 1rem;
+    height: 100%;
+    font-size: 1rem;
+    color: var(--color-five);
+}
+
+.tab-menu .link-icon.left{
+    margin-right: 1rem;
+}
+
+.tab-menu .no-text .link-icon.left{
+    margin-right: 0;
+}
+
+.tab-menu .link-icon.right{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.tab-menu .tab-content-list .tab-content{
+    display: block;
+}
+
+.tab-menu .tab-content-list .tab-content.closed{
+    display: none;
+}
+
+/* * MD */
+@media(min-width: 768px){
+    /**/
+}
+
+/* LG */
+@media(min-width: 1024px){
+    /**/
+}
+
+/* XL */
+@media(min-width: 1200px){
+    /**/
+}

@@ -13,6 +13,7 @@ export class Content{
         this.setHTML(html);
         this.setProperties();
         this.setStates();
+        this.setSections();
     }
 
     /**
@@ -55,7 +56,20 @@ export class Content{
      * @memberof Content
      */
     setHTML(html = null,){
-        this.html = properties.html;
+        this.html = html;
+    }
+
+    /**
+     * * Set the Content inside sections.
+     * @memberof Content
+     */
+    setSections(){
+        if(this.html.dataset.sections){
+            this.sections = [];
+            for(const section of this.html.dataset.sections.split(',')){
+                this.sections.push(section);
+            }
+        }
     }
 
     /**
@@ -66,20 +80,53 @@ export class Content{
     switch(){
         switch(this.states.open){
             case true:
-                this.states.open = false;
-                if(this.html.classList.contains('opened')){
-                    this.html.classList.remove('opened');
-                }
-                this.html.classList.add('closed');
+                this.close();
                 return false;
             case false:
-                this.states.open = true;
-                if(this.html.classList.contains('closed')){
-                    this.html.classList.remove('closed');
-                }
-                this.html.classList.add('opened');
+                this.open();
                 return true;
         }
+    }
+
+    /**
+     * * Open the Content.
+     * @memberof Content
+     */
+    open(){
+        this.states.open = true;
+        if(this.html.classList.contains('closed')){
+            this.html.classList.remove('closed');
+        }
+        this.html.classList.add('opened');
+    }
+
+    /**
+     * * Close the Content.
+     * @memberof Content
+     */
+    close(){
+        this.states.open = false;
+        if(this.html.classList.contains('opened')){
+            this.html.classList.remove('opened');
+        }
+        this.html.classList.add('closed');
+    }
+
+    /**
+     * * Check if the section is inside the Content.
+     * @param {*} id
+     * @returns
+     * @memberof Content
+     */
+    checkInsideSection(id){
+        if(this.sections){
+            for(const section of this.sections){
+                if(section == id){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -89,9 +136,11 @@ export class Content{
      * @param {Content[]} contents - Contents created.
      * @memberof Content
      */
-    static open(id = '', contents = []){
+    static checkOpened(id = '', contents = []){
         for(const content of contents){
             if(id == content.properties.id){
+                content.switch();
+            }else if(content.checkInsideSection(id)){
                 content.switch();
             }
         }

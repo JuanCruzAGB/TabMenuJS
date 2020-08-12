@@ -1,4 +1,5 @@
-import {Content} from "./Content.js";
+import { Content } from "./Content.js";
+import { TabMenu } from "./TabMenu.js";
 
 /**
  * * Tab controls the tab button.
@@ -9,11 +10,12 @@ export class Tab{
     /**
      * * Creates an instance of Tab.
      * @param {HTMLElement} html - Tab HTML Element.
-     * @param {Content[]]} contents - TabMenu Contents.
+     * @param {Content[]} contents - TabMenu Contents.
+     * @param {TabMenu} tabmenu - TabMenu.
      * @memberof Tab
      */
-    constructor(html = undefined, contents = [],){
-        this.setHTML(html, contents);
+    constructor(html = undefined, contents = [], tabmenu = undefined){
+        this.setHTML(html, contents, tabmenu);
         this.setProperties();
         this.setStates();
         this.setTarget();
@@ -25,7 +27,6 @@ export class Tab{
      */
     setProperties(){
         this.properties = {};
-        this.setName();
     }
 
     /**
@@ -35,14 +36,6 @@ export class Tab{
     setStates(){
         this.states = {};
         this.setOpen();
-    }
-
-    /**
-     * * Set the Tab name.
-     * @memberof Tab
-     */
-    setName(){
-        this.propertoes.name = this.html.dataset.name;
     }
 
     /**
@@ -64,20 +57,21 @@ export class Tab{
     /**
      * * Set the Tab HTML Element.
      * @param {HTMLElement} html - Tab HTML Element.
-     * @param {Content[]]} contents - TabMenu Contents.
+     * @param {Content[]} contents - TabMenu Contents.
+     * @param {TabMenu} tabmenu - TabMenu.
      * @memberof Tab
      */
-    setHTML(html = undefined, contents = [],){
+    setHTML(html = undefined, contents = [], tabmenu = undefined){
         let tab = this;
         this.html = html;
         this.html.addEventListener('click', function(e){
-            if(this.html.classList.contains('tab-button')){
-                e.preventDefault();
-                tab.switch();
-                for(const content of contents){
-                    if(this.href.split('#').pop() == content.properties.name){
-                        content.switch();
-                    }
+            tabmenu.closeAll();
+            tab.switch();
+            for(const content of contents){
+                if(this.href.split('#').pop() == content.properties.id){
+                    content.switch();
+                }else if(content.checkInsideSection(this.href.split('#').pop())){
+                    content.switch();
                 }
             }
         });
@@ -91,37 +85,53 @@ export class Tab{
     switch(){
         switch(this.states.open){
             case true:
-                this.states.open = false;
-                if(this.html.classList.contains('opened')){
-                    this.html.classList.remove('opened');
-                }
-                this.html.classList.add('closed');
+                this.close();
                 return false;
             case false:
-                this.states.open = true;
-                if(this.html.classList.contains('closed')){
-                    this.html.classList.remove('closed');
-                }
-                this.html.classList.add('opened');
+                this.open();
                 return true;
         }
     }
 
     /**
+     * * Open the Tab.
+     * @memberof Tab
+     */
+    open(){
+        this.states.open = true;
+        if(this.html.classList.contains('closed')){
+            this.html.classList.remove('closed');
+        }
+        this.html.classList.add('opened');
+    }
+
+    /**
+     * * Close the Tab.
+     * @memberof Tab
+     */
+    close(){
+        this.states.open = false;
+        if(this.html.classList.contains('opened')){
+            this.html.classList.remove('opened');
+        }
+        this.html.classList.add('closed');
+    }
+
+    /**
      * * Search the current Tab open.
      * @static
-     * @param {string} name - Tab name.
+     * @param {string} target - Tab target.
      * @param {Tab[]} tabs - Tabs created.
      * @param {Content[]} contents - Contents created.
      * @memberof Tab
      */
-    static open(name = '', tabs = [], contents = [],){
+    static checkOpened(target = '', tabs = [], contents = [],){
         let state = false;
         for(const tab of tabs){
-            if(name == tab.properties.name){
+            if(target == tab.target){
                 state = tab.switch();
                 if(state){
-                    Content.open(tab.target, contents);
+                    Content.checkOpened(tab.target, contents);
                 }
             }
         }
