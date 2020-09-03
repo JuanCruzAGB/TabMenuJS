@@ -113,6 +113,20 @@ export class Content{
     }
 
     /**
+     * * Check if the Content has an ID.
+     * @param {string} id - Content ID.
+     * @returns
+     * @memberof Content
+     */
+    checkId(id){
+        if(this.properties.id == id){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
      * * Check if the section is inside the Content.
      * @param {*} id
      * @returns

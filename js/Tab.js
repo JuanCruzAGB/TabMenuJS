@@ -135,5 +135,6 @@ export class Tab{
                 }
             }
         }
+        return state;
     }
 }
