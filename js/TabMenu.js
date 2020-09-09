@@ -17,6 +17,7 @@ export class TabMenu{
         id: 'tab-1',
     }, states = {
         open: [],
+        active: undefined,
     }){
         // TODO Edit custom errors.
         this.setProperties(properties);
@@ -26,6 +27,7 @@ export class TabMenu{
         this.setTabs();
         // TODO Create this.checkInteractions();
         this.checkOpenedTab();
+        this.checkActiveTab();
     }
 
     /**
@@ -47,9 +49,11 @@ export class TabMenu{
      */
     setStates(states = {
         open: [],
+        active: undefined,
     }){
         this.states = {};
         this.setOpen(states);
+        this.setActive(states);
     }
 
     /**
@@ -72,6 +76,17 @@ export class TabMenu{
         open: [],
     }){
         this.states.open = states.open;
+    }
+
+    /**
+     * * Set the TabMenu active state.
+     * @param {object} states - TabMenu states.
+     * @memberof TabMenu
+     */
+    setActive(states = {
+        active: undefined,
+    }){
+        this.states.active = states.active;
     }
 
     /**
@@ -105,7 +120,7 @@ export class TabMenu{
      */
     setTabs(){
         this.tabs = [];
-        let tabs = document.querySelectorAll('.tab-menu .tab-menu-list .tab-button');
+        let tabs = document.querySelectorAll('.tab-menu .tab-menu-list .tab-button, .tab-menu .tab-menu-list .tab-link');
         for(const tab of tabs){
             this.tabs.push(new Tab(tab, this.contents, this));
         }
@@ -139,6 +154,16 @@ export class TabMenu{
                     Content.checkOpened(target, this.contents);
                 }
             }
+        }
+    }
+
+    /**
+     * * Check if should be a current TabMenu Tab active.
+     * @memberof NavMenu
+     */
+    checkActiveTab(){
+        if(this.states.active){
+            Tab.checkActive(this.states.active, this.tabs);
         }
     }
 }

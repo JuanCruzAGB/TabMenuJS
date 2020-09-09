@@ -64,17 +64,19 @@ export class Tab{
     setHTML(html = undefined, contents = [], tabmenu = undefined){
         let tab = this;
         this.html = html;
-        this.html.addEventListener('click', function(e){
-            tabmenu.closeAll();
-            tab.switch();
-            for(const content of contents){
-                if(this.href.split('#').pop() == content.properties.id){
-                    content.switch();
-                }else if(content.checkInsideSection(this.href.split('#').pop())){
-                    content.switch();
+        if(!this.html.classList.contains('tab-link')){
+            this.html.addEventListener('click', function(e){
+                tabmenu.closeAll();
+                tab.switch();
+                for(const content of contents){
+                    if(this.href.split('#').pop() == content.properties.id){
+                        content.switch();
+                    }else if(content.checkInsideSection(this.href.split('#').pop())){
+                        content.switch();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -118,6 +120,34 @@ export class Tab{
     }
 
     /**
+     * * Get the Tab pathname.
+     * @memberof Tab
+     */
+    getPathname(){
+        let regexp = new RegExp('https://');
+        if(regexp.exec(this.target)){
+            let target = this.target.split('https://').pop()
+            regexp = new RegExp('/');
+            return target.slice(regexp.exec(target).index).split('#').shift();
+        }else{
+            let target = this.target.split('http://').pop()
+            regexp = new RegExp('/');
+            return target.slice(regexp.exec(target).index).split('#').shift();
+        }
+    }
+
+    /**
+     * * Activate a Tab.
+     * @memberof Tab
+     */
+    activate(){
+        if (!this.html.parentNode.classList.contains('active')) {
+            this.html.parentNode.classList.toggle('active');
+        }
+        return true;
+    }
+
+    /**
      * * Search the current Tab open.
      * @static
      * @param {string} target - Tab target.
@@ -133,6 +163,23 @@ export class Tab{
                 if(state){
                     Content.checkOpened(tab.target, contents);
                 }
+            }
+        }
+        return state;
+    }
+
+    /**
+     * * Search the current Tab active.
+     * @static
+     * @param {string} target - Tab target.
+     * @param {Tab[]} tabs - Tabs created.
+     * @memberof Tab
+     */
+    static checkActive(target = '', tabs = []){
+        let state = false;
+        for(const tab of tabs){
+            if(target == tab.getPathname()){
+                state = tab.activate();
             }
         }
         return state;

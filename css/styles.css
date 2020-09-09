@@ -15,16 +15,13 @@
     display: inline-flex;
     align-items: center;
     width: 100%;
-    height: 2.3rem;
-    line-height: 2.3rem;
+    height: 4.6rem;
+    line-height: 4.6rem;
     text-decoration: none;
     color: var(--color-two);
     transition: 500ms;
-}
-
-.tab-menu .tabs .tab .tab-link:hover,
-.tab-menu .tabs .tab .tab-link.active{
-    color: var(--color-two-alternative);
+    padding: 1rem;
+    border-radius: 0;
 }
 
 .tab-menu .tabs .tab .tab-link .link-icon{
