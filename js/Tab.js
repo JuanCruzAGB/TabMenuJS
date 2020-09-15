@@ -51,7 +51,11 @@ export class Tab{
      * @memberof Tab
      */
     setTarget(){
-        this.target = this.html.href.split('#').pop();
+        if(this.html.href.split('#').pop()){
+            this.target = this.html.href.split('#').pop();
+        }else{
+            this.target = undefined;
+        }
     }
 
     /**
@@ -124,15 +128,18 @@ export class Tab{
      * @memberof Tab
      */
     getPathname(){
-        let regexp = new RegExp('https://');
-        if(regexp.exec(this.target)){
+        let https_regexp = new RegExp('https://');
+        let http_regexp = new RegExp('http://');
+        if(https_regexp.exec(this.target)){
             let target = this.target.split('https://').pop()
-            regexp = new RegExp('/');
-            return target.slice(regexp.exec(target).index).split('#').shift();
-        }else{
+            https_regexp = new RegExp('/');
+            return target.slice(https_regexp.exec(target).index).split('#').shift();
+        }else if(http_regexp.exec(this.target)){
             let target = this.target.split('http://').pop()
-            regexp = new RegExp('/');
-            return target.slice(regexp.exec(target).index).split('#').shift();
+            http_regexp = new RegExp('/');
+            return target.slice(http_regexp.exec(target).index).split('#').shift();
+        }else{
+            return '';
         }
     }
 
