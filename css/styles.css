@@ -1,14 +1,14 @@
 .tab-menu{
-    --color-one: #222; /* * Titles */
-    --color-two: #222; /* * Buttons */
-    --color-two-alternative: #000; /* * Buttons efects */
-    --color-three: #fff; /* * Background */
-    --color-three-alternative: #ddd; /* * Background efects */
-    --color-four: #ddd; /* * Borders efects */
-    --color-four-alternative: #ddd; /* * Borders efects */
-    --color-five: #ddd; /* * Icons */
-    --color-five-alternative: #ddd; /* * Icons efects */
-    --shadow-color: #32B1DA;
+    --tabmenu-color-one: #222; /* * Titles */
+    --tabmenu-color-two: #222; /* * Buttons */
+    --tabmenu-color-two-alternative: #000; /* * Buttons efects */
+    --tabmenu-color-three: #fff; /* * Background */
+    --tabmenu-color-three-alternative: #ddd; /* * Background efects */
+    --tabmenu-color-four: #ddd; /* * Borders efects */
+    --tabmenu-color-four-alternative: #ddd; /* * Borders efects */
+    --tabmenu-color-five: #ddd; /* * Icons */
+    --tabmenu-color-five-alternative: #ddd; /* * Icons efects */
+    --tabmenu-shadow-color: #32B1DA;
 }
 
 .tab-menu .tabs .tab .tab-link{
@@ -18,14 +18,14 @@
     height: 4.6rem;
     line-height: 4.6rem;
     text-decoration: none;
-    color: var(--color-two);
+    color: var(--tabmenu-color-two);
     transition: 500ms;
     padding: 1rem;
     border-radius: 0;
 }
 
 .tab-menu .tabs .tab .tab-link .link-icon{
-    color: var(--color-five);
+    color: var(--tabmenu-color-five);
     margin-right: .5rem;
 }
 
@@ -36,7 +36,7 @@
     width: 1rem;
     height: 100%;
     font-size: 1rem;
-    color: var(--color-five);
+    color: var(--tabmenu-color-five);
 }
 
 .tab-menu .link-icon.left{
