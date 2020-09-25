@@ -139,7 +139,7 @@ export class Tab{
             http_regexp = new RegExp('/');
             return target.slice(http_regexp.exec(target).index).split('#').shift();
         }else{
-            return '';
+            return this.target;
         }
     }
 
