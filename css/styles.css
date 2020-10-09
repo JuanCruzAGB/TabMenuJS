@@ -17,6 +17,10 @@
     width: 100%;
     background-color: var(--tabmenu-background-color);
 }
+    
+.tab-menu.horizontal .tabs {
+    overflow-x: auto;
+}
 
 .tab-menu .tabs .tab-header {
     min-height: 4.6rem;
@@ -40,7 +44,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    min-width: fit-content;
 }
 
 .tab-menu .tabs .tab-menu-list .tab .tab-link,
