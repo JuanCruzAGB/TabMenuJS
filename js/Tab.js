@@ -68,19 +68,20 @@ export class Tab{
     setHTML(html = undefined, contents = [], tabmenu = undefined){
         let tab = this;
         this.html = html;
-        if(!this.html.classList.contains('tab-link')){
-            this.html.addEventListener('click', function(e){
-                tabmenu.closeAll();
-                tab.switch();
-                for(const content of contents){
-                    if(this.href.split('#').pop() == content.properties.id){
-                        content.switch();
-                    }else if(content.checkInsideSection(this.href.split('#').pop())){
-                        content.switch();
-                    }
+        this.html.addEventListener('click', function(e){
+            if(this.classList.contains('tab-button')){
+                e.preventDefault();
+            }
+            tabmenu.closeAll();
+            tab.switch();
+            for(const content of contents){
+                if(this.href.split('#').pop() == content.properties.id){
+                    content.switch();
+                }else if(content.checkInsideSection(this.href.split('#').pop())){
+                    content.switch();
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
