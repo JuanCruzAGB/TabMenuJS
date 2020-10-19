@@ -36,6 +36,7 @@ export class Tab{
     setStates(){
         this.states = {};
         this.setOpen();
+        this.setActive();
     }
 
     /**
@@ -44,6 +45,14 @@ export class Tab{
      */
     setOpen(){
         this.states.open = false;
+    }
+
+    /**
+     * * Set the Tab active state.
+     * @memberof Tab
+     */
+    setActive(){
+        this.states.active = this.html.classList.contains('active');
     }
 
     /**
@@ -73,7 +82,7 @@ export class Tab{
                 e.preventDefault();
             }
             tabmenu.closeAll();
-            tab.switch();
+            tab.switch(tabmenu.tabs);
             for(const content of contents){
                 if(this.href.split('#').pop() == content.properties.id){
                     content.switch();
@@ -85,47 +94,8 @@ export class Tab{
     }
 
     /**
-     * * Change the Tab open state.
-     * @returns
-     * @memberof Tab
-     */
-    switch(){
-        switch(this.states.open){
-            case true:
-                this.close();
-                return false;
-            case false:
-                this.open();
-                return true;
-        }
-    }
-
-    /**
-     * * Open the Tab.
-     * @memberof Tab
-     */
-    open(){
-        this.states.open = true;
-        if(this.html.classList.contains('closed')){
-            this.html.classList.remove('closed');
-        }
-        this.html.classList.add('opened');
-    }
-
-    /**
-     * * Close the Tab.
-     * @memberof Tab
-     */
-    close(){
-        this.states.open = false;
-        if(this.html.classList.contains('opened')){
-            this.html.classList.remove('opened');
-        }
-        this.html.classList.add('closed');
-    }
-
-    /**
      * * Get the Tab pathname.
+     * @returns
      * @memberof Tab
      */
     getPathname(){
@@ -145,14 +115,88 @@ export class Tab{
     }
 
     /**
-     * * Activate a Tab.
+     * * Change the Tab open state.
+     * @param {object} tabs - TabMenu Tabs.
+     * @returns
      * @memberof Tab
      */
-    activate(){
-        if (!this.html.parentNode.classList.contains('active')) {
-            this.html.parentNode.classList.toggle('active');
+    switch(tabs = []){
+        let returnedElement = {
+            open: undefined,
+            active: undefined,
+        }
+        switch(this.states.open){
+            case true:
+                this.close();
+                returnedElement.open = false;
+                break;
+            case false:
+                this.open();
+                returnedElement.open = true;
+                break;
+        }
+        switch(this.states.active){
+            case true:
+                this.deactivate();
+                returnedElement.active = false;
+                break;
+            case false:
+                this.activate(tabs);
+                returnedElement.active = true;
+                break;
+        }
+        return returnedElement;
+    }
+
+    /**
+     * * Open the Tab.
+     * @memberof Tab
+     */
+    open(){
+        this.states.open = true;
+    }
+
+    /**
+     * * Close the Tab.
+     * @memberof Tab
+     */
+    close(){
+        this.states.open = false;
+    }
+
+    /**
+     * * Activate a Tab.
+     * @param {object} tabs - TabMenu Tabs.
+     * @returns
+     * @memberof Tab
+     */
+    activate(tabs = []){
+        if (!this.html.classList.contains('active')) {
+            if (tabs.length) {
+                for (const tab of tabs) {
+                    if (tab.states.active) {
+                        tab.html.classList.remove('active');
+                        tab.states.active = false;
+                    }
+                }
+            }
+            this.html.classList.add('active');
+            this.states.active = true;
         }
         return true;
+    }
+
+    /**
+     * * Deactivate a Tab.
+     * @returns
+     * @memberof Tab
+     */
+    deactivate(){
+        if (this.html.classList.contains('active')) {
+            this.html.classList.remove('active');
+            this.states.active = false;
+        }
+        return false;
     }
 
     /**
@@ -161,6 +205,7 @@ export class Tab{
      * @param {string} target - Tab target.
      * @param {Tab[]} tabs - Tabs created.
      * @param {Content[]} contents - Contents created.
+     * @returns
      * @memberof Tab
      */
     static checkOpened(target = '', tabs = [], contents = [],){
@@ -181,13 +226,16 @@ export class Tab{
      * @static
      * @param {string} target - Tab target.
      * @param {Tab[]} tabs - Tabs created.
+     * @returns
      * @memberof Tab
      */
     static checkActive(target = '', tabs = []){
         let state = false;
         for(const tab of tabs){
             if(target == tab.getPathname()){
-                state = tab.activate();
+                state = tab.activate(tabs);
+            }else{
+                state = tab.deactivate();
             }
         }
         return state;

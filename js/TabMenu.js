@@ -144,6 +144,19 @@ export class TabMenu{
     }
 
     /**
+     * * Open a Content.
+     * @param {object} open - TabMenu open state.
+     * @param {string} active - TabMenu active state.
+     * @memberof TabMenu
+     */
+    open(open = [], active = undefined){
+        this.states.open = open;
+        this.states.active = active;
+        this.checkOpenedTab();
+        this.checkActiveTab();
+    }
+
+    /**
      * * Check if should be a current TabMenu Tab open.
      * @memberof NavMenu
      */

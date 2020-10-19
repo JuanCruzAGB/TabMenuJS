@@ -13,8 +13,13 @@
     flex-wrap: wrap;
 }
 
+.tab-menu.vertical {
+    min-height: 100vh;
+}
+
 .tab-menu .tabs {
     width: 100%;
+    height: fit-content;
     background-color: var(--tabmenu-background-color);
 }
     
@@ -63,8 +68,8 @@
     transition: 500ms;
 }
 
-.tab-menu .tabs .tab-menu-list .tab .tab-link.opened,
-.tab-menu .tabs .tab-menu-list .tab .tab-button.opened,
+.tab-menu .tabs .tab-menu-list .tab .tab-link.active,
+.tab-menu .tabs .tab-menu-list .tab .tab-button.active,
 .tab-menu .tabs .tab-menu-list .tab .tab-link:hover,
 .tab-menu .tabs .tab-menu-list .tab .tab-button:hover {
     color: var(--tabmenu-button-color-alternative);
@@ -92,6 +97,7 @@
 @media (min-width: 768px) {
     .tab-menu.vertical .tabs {
         width: 25%;
+        height: 100%;
     }
     
     .tab-menu.vertical .tab-content-list {
