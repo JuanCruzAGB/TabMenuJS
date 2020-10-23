@@ -163,7 +163,7 @@ export class TabMenu{
     checkOpenedTab(){
         if(this.states.open.length){
             for(const target of this.states.open){
-                if(!Tab.checkOpened(target, this.tabs, this.contents)){
+                if(!Tab.checkOpened(target, this.tabs, this.contents, this)){
                     Content.checkOpened(target, this.contents);
                 }
             }

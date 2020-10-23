@@ -205,13 +205,15 @@ export class Tab{
      * @param {string} target - Tab target.
      * @param {Tab[]} tabs - Tabs created.
      * @param {Content[]} contents - Contents created.
+     * @param {TabMenu} tabmenu - Contents created.
      * @returns
      * @memberof Tab
      */
-    static checkOpened(target = '', tabs = [], contents = [],){
+    static checkOpened(target = '', tabs = [], contents = [], tabmenu = undefined){
         let state = false;
         for(const tab of tabs){
             if(target == tab.target){
+                tabmenu.closeAll();
                 state = tab.switch();
                 if(state){
                     Content.checkOpened(tab.target, contents);
