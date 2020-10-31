@@ -42,6 +42,10 @@
     object-fit: contain;
 }
 
+.tab-menu .tabs .tab-header.logo h1 {
+    display: none;
+}
+
 .tab-menu .tabs .tab-footer {
     width: 100%;
     height: fit-content;
