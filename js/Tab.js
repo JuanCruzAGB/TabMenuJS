@@ -81,13 +81,15 @@ export class Tab{
             if(this.classList.contains('tab-button')){
                 e.preventDefault();
             }
-            tabmenu.closeAll();
-            tab.switch(tabmenu.tabs);
-            for(const content of contents){
-                if(this.href.split('#').pop() == content.properties.id){
-                    content.switch();
-                }else if(content.checkInsideSection(this.href.split('#').pop())){
-                    content.switch();
+            if (!tabmenu.states.noClick) {
+                tabmenu.closeAll();
+                tab.switch(tabmenu.tabs);
+                for(const content of contents){
+                    if(this.href.split('#').pop() == content.properties.id){
+                        content.switch();
+                    }else if(content.checkInsideSection(this.href.split('#').pop())){
+                        content.switch();
+                    }
                 }
             }
         });

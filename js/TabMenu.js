@@ -18,6 +18,7 @@ export class TabMenu{
     }, states = {
         open: [],
         active: undefined,
+        noClick: false,
     }){
         // TODO Edit custom errors.
         this.setProperties(properties);
@@ -50,10 +51,12 @@ export class TabMenu{
     setStates(states = {
         open: [],
         active: undefined,
+        noClick: false,
     }){
         this.states = {};
         this.setOpen(states);
         this.setActive(states);
+        this.setNoCLick(states);
     }
 
     /**
@@ -87,6 +90,17 @@ export class TabMenu{
         active: undefined,
     }){
         this.states.active = states.active;
+    }
+
+    /**
+     * * Set the TabMenu active state.
+     * @param {object} states - TabMenu states.
+     * @memberof TabMenu
+     */
+    setNoCLick(states = {
+        noClick: false,
+    }){
+        this.states.noClick = states.noClick;
     }
 
     /**
