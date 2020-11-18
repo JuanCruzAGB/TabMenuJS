@@ -114,6 +114,8 @@
     
     .tab-menu.vertical .tab-content-list {
         width: 75%;
+        max-height: 100vh;
+        overflow: auto;
     }
 
     .tab-menu .tabs .tab-footer {
