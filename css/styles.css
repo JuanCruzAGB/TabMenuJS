@@ -24,7 +24,7 @@
     background-color: var(--tabmenu-background-color);
 }
     
-.tab-menu.horizontal .tabs {
+.tab-menu.horizontal .tabs .tab-menu-list {
     overflow-x: auto;
 }
 
