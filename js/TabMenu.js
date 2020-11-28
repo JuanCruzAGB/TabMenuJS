@@ -146,14 +146,10 @@ export class TabMenu{
      */
     closeAll(){
         for(const tab of this.tabs){
-            if(tab.states.open){
-                tab.close();
-            }
+            tab.close();
         }
         for(const content of this.contents){
-            if(content.states.open){
-                content.close();
-            }
+            content.close();
         }
     }
 
