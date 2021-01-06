@@ -1,4 +1,4 @@
-import { Content } from "./Content.js";
+import { Link } from "./Link.js";
 import { TabMenu } from "./TabMenu.js";
 
 /**
@@ -9,145 +9,308 @@ import { TabMenu } from "./TabMenu.js";
 export class Tab{
     /**
      * * Creates an instance of Tab.
-     * @param {HTMLElement} html - Tab HTML Element.
-     * @param {Content[]} contents - TabMenu Contents.
-     * @param {TabMenu} tabmenu - TabMenu.
+     * @param {Object} [properties] Tab properties:
+     * @param {String} [properties.id='tab-1'] Tab ID.
+     * @param {String} [properties.target=undefined] Tab target.
+     * @param {Object} [states] Tab states:
+     * @param {Boolean} [states.open=false] Tab open status.
+     * @param {Boolean} [states.active=false] Tab active tab status.
+     * @param {TabMenu} tabmenu TabMenu.
      * @memberof Tab
      */
-    constructor(html = undefined, contents = [], tabmenu = undefined){
-        this.setHTML(html, contents, tabmenu);
-        this.setProperties();
-        this.setStates();
-        this.setTarget();
+    constructor(properties = {
+        id: 'tab-1',
+        target: undefined,
+    }, states = {
+        open: false,
+        active: false,
+    }, tabmenu){
+        this.setProperties(properties);
+        this.setStates(states);
+        this.setLink(tabmenu);
+        this.setHTML(tabmenu);
     }
 
     /**
      * * Set the Tab properties.
+     * @param {Object} [properties] Tab properties:
+     * @param {String} [properties.id='tab-1'] Tab ID.
      * @memberof Tab
      */
-    setProperties(){
+    setProperties(properties = {
+        id: 'tab-1',
+        target: undefined,
+    }){
         this.properties = {};
+        this.setIDProperty(properties);
+        this.setTargetProperty(properties);
     }
 
     /**
-     * * Set the Tab states.
+     * * Returns the Tab properties or an specific property.
+     * @param {String} [name] Property name.
+     * @returns {Object|*}
      * @memberof Tab
      */
-    setStates(){
-        this.states = {};
-        this.setOpen();
-        this.setActive();
+    getProperties(name = ''){
+        if (name && name != '') {
+            return this.properties[name];
+        } else {
+            return this.properties;
+        }
     }
 
     /**
-     * * Set the Tab open state.
+     * * Check if there is a property.
+     * @param {String} name Property name.
+     * @returns {Boolean}
      * @memberof Tab
      */
-    setOpen(){
-        this.states.open = false;
+    hasProperty(name = ''){
+        if (this.properties.hasOwnProperty(name)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * * Set the Tab active state.
+     * * Change a property value.
+     * @param {String} name Property name.
+     * @param {*} value Property value.
      * @memberof Tab
      */
-    setActive(){
-        this.states.active = this.html.classList.contains('active');
+    changeProperty(name = '', value = ''){
+        if (this.hasProperty(name)) {
+            this.properties[name] = value;
+        }
+        switch (name) {
+            default:
+                break;
+        }
+    }
+
+    /**
+     * * Set the Tab ID.
+     * @param {Object} [properties] Tab properties:
+     * @param {String} [properties.id='tab-1'] Tab ID.
+     * @memberof Tab
+     */
+    setIDProperty(properties = {
+        id: 'tab-1',
+    }){
+        this.properties.id = ((properties.hasOwnProperty('id')) ? properties.id : 'tab-1');
+    }
+
+    /**
+     * * Returns the Tab ID.
+     * @returns {String}
+     * @memberof Tab
+     */
+    getIDProperty(){
+        return this.properties.id;
     }
 
     /**
      * * Set the Tab target.
+     * @param {Object} [properties] Tab properties:
+     * @param {String} [properties.target=undefined] Tab target.
      * @memberof Tab
      */
-    setTarget(){
-        if(this.html.href.split('#').pop()){
-            this.target = this.html.href.split('#').pop();
-        }else{
-            this.target = undefined;
+    setTargetProperty(properties = {
+        target: undefined,
+    }){
+        this.properties.target = ((properties.hasOwnProperty('target')) ? properties.target : undefined);
+    }
+
+    /**
+     * * Returns the Tab target.
+     * @returns {String}
+     * @memberof Tab
+     */
+    getTargetProperty(){
+        return this.properties.target;
+    }
+
+    /**
+     * * Set the Tab states.
+     * @param {Object} [states] Tab states:
+     * @param {Boolean} [states.open=false] Tab open status.
+     * @param {Boolean} [states.active=false] Tab active tab status.
+     * @memberof Tab
+     */
+    setStates(states = {
+        open: false,
+        active: false,
+    }){
+        this.states = {};
+        this.setOpenStatus(states);
+        this.setActiveStatus(states);
+    }
+
+    /**
+     * * Returns the Tab states or an specific states.
+     * @param {String} [property] States name.
+     * @returns {Object|*}
+     * @memberof Tab
+     */
+    getStates(property = ''){
+        if (property && property != '') {
+            return this.states[property];
+        } else {
+            return this.states;
         }
+    }
+
+    /**
+     * * Check if there is a status.
+     * @param {String} name Status name.
+     * @returns {Boolean}
+     * @memberof Tab
+     */
+    hasStates(name = ''){
+        if (this.states.hasOwnProperty(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * * Change a status value.
+     * @param {String} name Status name.
+     * @param {*} value Status value.
+     * @memberof Tab
+     */
+    changeStatus(name = '', value = ''){
+        if (this.hasStates(name)) {
+            this.states[name] = value;
+        }
+        switch (name) {
+            case 'open':
+                if (this.getStates('open')) {
+                    if (this.getHTML().classList.contains('closed')) {
+                        this.getHTML().classList.remove('closed');
+                    }
+                    this.getHTML().classList.add('opened');
+                    if (!this.getStates('active')) {
+                        this.getLink().activate();
+                    }
+                } else {
+                    if (this.getHTML().classList.contains('opened')) {
+                        this.getHTML().classList.remove('opened');
+                    }
+                    this.getHTML().classList.add('closed');
+                    if (!this.getStates('active')) {
+                        this.getLink().deactivate();
+                    }
+                }
+                break;
+            case 'active':
+                if (this.getStates('active')) {
+                    this.getLink().activate();
+                } else {
+                    this.getLink().deactivate();
+                }
+                break;
+        }
+    }
+
+    /**
+     * * Set the Tab open status.
+     * @param {Object} [states] Tab states:
+     * @param {Boolean} [states.open=false] Tab open status.
+     * @memberof Tab
+     */
+    setOpenStatus(states = {
+        open: false,
+    }){
+        this.states.open = ((states.hasOwnProperty('open')) ? states.open : false);
+    }
+
+    /**
+     * * Returns the Tab open status.
+     * @returns {Boolean}
+     * @memberof Tab
+     */
+    getOpenStatus(){
+        return this.states.open;
+    }
+
+    /**
+     * * Set the Tab active tab status.
+     * @param {Object} [states] Tab states:
+     * @param {Boolean} [states.active=false] Tab active tab status.
+     * @memberof Tab
+     */
+    setActiveStatus(states = {
+        active: false,
+    }){
+        this.states.active = ((states.hasOwnProperty('active')) ? states.active : false);
+    }
+
+    /**
+     * * Returns the Tab active tabs status.
+     * @returns {Boolean}
+     * @memberof Tab
+     */
+    getActiveStatus(){
+        return this.states.active;
     }
 
     /**
      * * Set the Tab HTML Element.
-     * @param {HTMLElement} html - Tab HTML Element.
-     * @param {Content[]} contents - TabMenu Contents.
-     * @param {TabMenu} tabmenu - TabMenu.
+     * @param {TabMenu} tabmenu TabMenu.
      * @memberof Tab
      */
-    setHTML(html = undefined, contents = [], tabmenu = undefined){
-        let tab = this;
-        this.html = html;
-        this.html.addEventListener('click', function(e){
-            if(this.classList.contains('tab-button')){
-                e.preventDefault();
-            }
-            if (!tabmenu.states.noClick) {
-                tabmenu.closeAll();
-                tab.switch(tabmenu.tabs);
-                for(const content of contents){
-                    if(this.href.split('#').pop() == content.properties.id){
-                        content.switch();
-                    }else if(content.checkInsideSection(this.href.split('#').pop())){
-                        content.switch();
-                    }
-                }
-            }
-        });
+    setHTML(tabmenu){
+        this.html = Tab.getDomHTML(this.getProperties('id'), tabmenu);
     }
 
     /**
-     * * Get the Tab pathname.
-     * @returns
+     * * Returns the Tab HTML Element.
+     * @returns {HTMLElement}
      * @memberof Tab
      */
-    getPathname(){
-        let https_regexp = new RegExp('https://');
-        let http_regexp = new RegExp('http://');
-        if(https_regexp.exec(this.target)){
-            let target = this.target.split('https://').pop()
-            https_regexp = new RegExp('/');
-            return target.slice(https_regexp.exec(target).index).split('#').shift();
-        }else if(http_regexp.exec(this.target)){
-            let target = this.target.split('http://').pop()
-            http_regexp = new RegExp('/');
-            return target.slice(http_regexp.exec(target).index).split('#').shift();
-        }else{
-            return this.target;
-        }
+    getHTML(){
+        return this.html;
+    }
+
+    /**
+     * * Set the Tab Link HTML Element.
+     * @param {TabMenu} tabmenu TabMenu.
+     * @memberof Tab
+     */
+    setLink(tabmenu){
+        this.link = new Link({
+            id: `${ this.getProperties('id') }-link`,
+        }, {
+            active: this.getStates('active'),
+        }, tabmenu, this);
+    }
+
+    /**
+     * * Returns the Tab Link HTML Element.
+     * @returns {HTMLElement}
+     * @memberof Tab
+     */
+    getLink(){
+        return this.link;
     }
 
     /**
      * * Change the Tab open state.
-     * @param {object} tabs - TabMenu Tabs.
-     * @returns
      * @memberof Tab
      */
-    switch(tabs = []){
-        let returnedElement = {
-            open: undefined,
-            active: undefined,
-        }
-        switch(this.states.open){
+    switch(){
+        switch(this.getStates('open')){
             case true:
                 this.close();
-                returnedElement.open = false;
                 break;
             case false:
                 this.open();
-                returnedElement.open = true;
                 break;
         }
-        switch(this.states.active){
-            case true:
-                this.deactivate();
-                returnedElement.active = false;
-                break;
-            case false:
-                this.activate(tabs);
-                returnedElement.active = true;
-                break;
-        }
-        return returnedElement;
     }
 
     /**
@@ -155,7 +318,7 @@ export class Tab{
      * @memberof Tab
      */
     open(){
-        this.states.open = true;
+        this.changeStatus('open', true);
     }
 
     /**
@@ -163,85 +326,107 @@ export class Tab{
      * @memberof Tab
      */
     close(){
-        this.states.open = false;
+        this.changeStatus('open', false);
     }
 
     /**
      * * Activate a Tab.
-     * @param {object} tabs - TabMenu Tabs.
-     * @returns
      * @memberof Tab
      */
-    activate(tabs = []){
-        if (!this.html.classList.contains('active')) {
-            if (tabs.length) {
-                for (const tab of tabs) {
-                    if (tab.states.active) {
-                        tab.html.classList.remove('active');
-                        tab.states.active = false;
-                    }
-                }
-            }
-            this.html.classList.add('active');
-            this.states.active = true;
-        }
-        return true;
+    activate(){
+        this.changeStatus('active', true);
     }
 
     /**
      * * Deactivate a Tab.
-     * @returns
      * @memberof Tab
      */
     deactivate(){
-        if (this.html.classList.contains('active')) {
-            this.html.classList.remove('active');
-            this.states.active = false;
-        }
-        return false;
+        this.changeStatus('active', false);
     }
 
     /**
-     * * Search the current Tab open.
+     * * Generates the TabMenu Tab.
      * @static
-     * @param {string} target - Tab target.
-     * @param {Tab[]} tabs - Tabs created.
-     * @param {Content[]} contents - Contents created.
-     * @param {TabMenu} tabmenu - Contents created.
-     * @returns
+     * @param {TabMenu} tabmenu Tab TabMenu parent.
+     * @returns {Tab[]}
      * @memberof Tab
      */
-    static checkOpened(target = '', tabs = [], contents = [], tabmenu = undefined){
-        let state = false;
-        for(const tab of tabs){
-            if(target == tab.target){
-                tabmenu.closeAll();
-                state = tab.switch();
-                if(state){
-                    Content.checkOpened(tab.target, contents);
+    static generate(tabmenu){
+        let tabs = [], htmls = this.getAllDomHTML(tabmenu.getProperties('id'));
+        for(const key in htmls){
+            if (htmls.hasOwnProperty(key)) {
+                const html = htmls[key];
+                let link = html.children[0];
+                for (const child of html.children) {
+                    if (child.classList.contains('tab-link') && child.classList.contains('tab-button')) {
+                        link = child;
+                    }
+                }
+                tabs.push(new this(this.generateProperties(key, link), this.generateStates(html, tabmenu), tabmenu));
+            }
+        }
+        return tabs;
+    }
+
+    /**
+     * * Generates the Tab properties.
+     * @static
+     * @param {Number} key Tab key.
+     * @param {HTMLElement} link Tab Link HTML Element.
+     * @returns {Object}
+     * @memberof Tab
+     */
+    static generateProperties(key, link){
+        return {
+            id: `tab-${ key }`,
+            target: ((link.href.split('#').pop()) ? link.href.split('#').pop() : undefined),
+        };
+    }
+
+    /**
+     * * Generates the Tab states.
+     * @static
+     * @param {HTMLElement} html Tab HTML Element.
+     * @param {TabMenu} tabmenu Tab TabMenu parent.
+     * @returns {Object}
+     * @memberof Tab
+     */
+    static generateStates(html, tabmenu){
+        return {
+            open: html.classList.contains('opened'),
+            active: tabmenu.getStates('active'),
+        };
+    }
+
+    /**
+     * * Returns all the Content HTML Elements.
+     * @static
+     * @param {String} id TabMenu ID.
+     * @returns {HTMLElement[]}
+     * @memberof Content
+     */
+    static getAllDomHTML(id){
+        return document.querySelectorAll(`#${ id }.tab-menu .tab-menu-list .tab`);
+    }
+
+    /**
+     * * Returns a Tab HTML Element.
+     * @static
+     * @param {String} id Tab ID.
+     * @param {TabMenu} tabmenu Tab TabMenu parent.
+     * @returns {HTMLElement[]}
+     * @memberof Tab
+     */
+    static getDomHTML(id, tabmenu){
+        let htmls = document.querySelectorAll(`#${ tabmenu.getProperties('id') }.tab-menu .tab-menu-list .tab`);
+        for (const key in htmls) {
+            if (htmls.hasOwnProperty(key)) {
+                const html = htmls[key];
+                if (`tab-${ key }` == id) {
+                    return html;
                 }
             }
         }
-        return state;
-    }
-
-    /**
-     * * Search the current Tab active.
-     * @static
-     * @param {string} target - Tab target.
-     * @param {Tab[]} tabs - Tabs created.
-     * @returns
-     * @memberof Tab
-     */
-    static checkActive(target = '', tabs = []){
-        let state = false;
-        for(const tab of tabs){
-            if(target == tab.getPathname()){
-                state = tab.activate(tabs);
-            }else{
-                state = tab.deactivate();
-            }
-        }
-        return state;
     }
 }
