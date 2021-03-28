@@ -105,7 +105,7 @@
     display: none;
 }
 
-/* * MD */
+/* ? MD */
 @media (min-width: 768px) {
     .tab-menu.vertical .tabs {
         width: 25%;
@@ -125,14 +125,19 @@
     }
 }
 
-/* * LG */
+/* ? LG */
 @media (min-width: 1024px) {
     .tab-menu.horizontal .tabs {
         padding: 0 10rem;
     }
 }
 
-/* * XL */
+/* ? XL */
 @media (min-width: 1200px) {
+    /**/
+}
+
+/* ? XXL */
+@media (min-width: 1536px) {
     /**/
 }
