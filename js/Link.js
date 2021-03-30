@@ -39,7 +39,7 @@ export class Link extends Class {
                 }
             }
         }
-        this.html.addEventListener('click', function(e){
+        this.html.addEventListener('click', function (e) {
             if (this.classList.contains('tab-button')) {
                 e.preventDefault();
                 tabmenu.closeAll();

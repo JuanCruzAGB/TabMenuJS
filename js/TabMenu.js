@@ -86,7 +86,6 @@ export class TabMenu extends Class {
      * @memberof TabMenu
      */
     checkActiveState () {
-        console.log(this.state.active);
         if (this.state.active) {
             for (const tab of this.tabs) {
                 console.log(tab.link.getPathname());
