@@ -1,6 +1,16 @@
 // ? JuanCruzAGB repository
 import Class from "../../JuanCruzAGB/js/Class.js";
 
+/** @var {object} defaultProps Default properties. */
+let defaultProps = {
+    id: 'link-1',
+};
+
+/** @var {object} defaultState Default state. */
+let defaultState = {
+    active: false,
+};
+
 /**
  * * Link controls the tab button.
  * @export
@@ -24,7 +34,7 @@ export class Link extends Class {
     }, state = {
         active: false,
     }, tabmenu, tab) {
-        super(props, state);
+        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
         let intance = this;
         let htmls = document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`);
         for (const key in document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`)) {

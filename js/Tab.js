@@ -5,6 +5,18 @@ import Class from "../../JuanCruzAGB/js/Class.js";
 import Link from "./Link.js";
 import TabMenu from "./TabMenu.js";
 
+/** @var {object} defaultProps Default properties. */
+let defaultProps = {
+    id: 'tab-1',
+    target: undefined,
+};
+
+/** @var {object} defaultState Default state. */
+let defaultState = {
+    open: false,
+    active: false,
+};
+
 /**
  * * Tab controls the tab button.
  * @export
@@ -31,7 +43,7 @@ export class Tab extends Class {
         open: false,
         active: false,
     }, tabmenu) {
-        super(props, state);
+        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
         this.setLink(tabmenu);
         let htmls = document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`);
         for (const key in htmls) {

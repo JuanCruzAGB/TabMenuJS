@@ -1,6 +1,16 @@
 // ? JuanCruzAGB repository
 import Class from "../../JuanCruzAGB/js/Class.js";
 
+/** @var {object} defaultProps Default properties. */
+let defaultProps = {
+    id: 'content-1',
+};
+
+/** @var {object} defaultState Default state. */
+let defaultState = {
+    open: false,
+};
+
 /**
  * * Content controls the TabMenu Content.
  * @export
@@ -23,7 +33,7 @@ export class Content extends Class {
     }, state = {
         open: false,
     }, tabmenu) {
-        super(props, state);
+        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
         this.setHTML(`#${ tabmenu.props.id }.tab-menu .tab-content-list #${ this.props.id }.tab-content`);
         this.setSections();
     }

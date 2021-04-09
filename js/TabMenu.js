@@ -5,6 +5,17 @@ import Class from '../../JuanCruzAGB/js/Class.js';
 import Tab from './Tab.js';
 import Content from './Content.js';
 
+/** @var {object} defaultProps Default properties. */
+let defaultProps = {
+    id: 'tab-menu-1',
+};
+
+/** @var {object} defaultState Default state. */
+let defaultState = {
+    open: [],
+    active: undefined,
+};
+
 /**
  * * TabMenu makes an excellent tab menu.
  * @export
@@ -35,7 +46,7 @@ export class TabMenu extends Class {
         params: {
             //
     }}) {
-        super(props, state);
+        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
         this.setCallbacks({
             default: callback,
         });
