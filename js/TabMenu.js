@@ -99,7 +99,6 @@ export class TabMenu extends Class {
     checkActiveState () {
         if (this.state.active) {
             for (const tab of this.tabs) {
-                console.log(tab.link.getPathname());
                 if (tab.link.getPathname() == this.state.active) {
                     tab.activate();
                 } else {
