@@ -1,4 +1,4 @@
-.tab-menu {
+:root {
     --tabmenu-title-color: #222;
     --tabmenu-button-color: #222;
     --tabmenu-button-color-alternative: #000;
@@ -8,7 +8,9 @@
     --tabmenu-border-color-alternative: #ddd;
     --tabmenu-icon-color: #ddd;
     --tabmenu-icon-color-alternative: #ddd;
-    --tabmenu-shadow-color: #32B1DA;
+}
+
+.tab-menu {
     display: flex;
     flex-wrap: wrap;
 }
