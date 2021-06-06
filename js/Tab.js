@@ -1,22 +1,6 @@
 // ? JuanCruzAGB repository
 import Class from "../../JuanCruzAGB/js/Class.js";
 
-// ? TabMenu repository
-import Link from "./Link.js";
-import TabMenu from "./TabMenu.js";
-
-/** @var {object} defaultProps Default properties. */
-let defaultProps = {
-    id: 'tab-1',
-    target: undefined,
-};
-
-/** @var {object} defaultState Default state. */
-let defaultState = {
-    open: false,
-    active: false,
-};
-
 /**
  * * Tab controls the tab button.
  * @export
@@ -32,7 +16,6 @@ export class Tab extends Class {
      * @param {string} [props.target=undefined] Tab target.
      * @param {object} [state] Tab state:
      * @param {boolean} [state.open=false] Tab open status.
-     * @param {boolean} [state.active=false] Tab active tab status.
      * @param {TabMenu} tabmenu TabMenu.
      * @memberof Tab
      */
@@ -41,19 +24,10 @@ export class Tab extends Class {
         target: undefined,
     }, state = {
         open: false,
-        active: false,
     }, tabmenu) {
-        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
-        this.setLink(tabmenu);
-        let htmls = document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`);
-        for (const key in htmls) {
-            if (htmls.hasOwnProperty(key)) {
-                const html = htmls[key];
-                if (`tab-${ key }` == this.props.id) {
-                    this.setHTML(html);
-                }
-            }
-        }
+        super({ ...Tab.props, ...props }, { ...Tab.state, ...state });
+        this.setButtons(tabmenu);
+        this.setHTML(`#${ tabmenu.props.id }.tab-menu .tab-menu-list #tab-${ this.props.target }.tab`);
     }
 
     /**
@@ -61,26 +35,16 @@ export class Tab extends Class {
      * @param {TabMenu} tabmenu TabMenu.
      * @memberof Tab
      */
-    setLink (tabmenu) {
-        this.link = new Link({
-            id: `${ this.props.id }-link`,
-        }, {
-            active: this.state.active,
-        }, tabmenu, this);
-    }
-
-    /**
-     * * Change the Tab open state.
-     * @memberof Tab
-     */
-    switch () {
-        switch (this.state.open) {
-            case true:
-                this.close();
-                break;
-            case false:
-                this.open();
-                break;
+    setButtons (tabmenu) {
+        let instance = this;
+        if (!this.buttons) {
+            this.buttons = [];
+        }
+        for (const btn of document.querySelectorAll(`a[href='#${ this.props.target }'].tab-button`)) {
+            this.buttons.push(btn);
+            btn.addEventListener('click', function (e) {
+                tabmenu.open(instance.props.target);
+            })
         }
     }
 
@@ -90,12 +54,9 @@ export class Tab extends Class {
      */
     open () {
         this.setState('open', true);
-        if (this.html.classList.contains('closed')) {
-            this.html.classList.remove('closed');
-        }
         this.html.classList.add('opened');
-        if (!this.state.active) {
-            this.activate();
+        for (const btn of this.buttons) {
+            btn.classList.add('opened');
         }
     }
 
@@ -108,28 +69,9 @@ export class Tab extends Class {
         if (this.html.classList.contains('opened')) {
             this.html.classList.remove('opened');
         }
-        this.html.classList.add('closed');
-        if (this.state.active) {
-            this.deactivate();
+        for (const btn of this.buttons) {
+            btn.classList.remove('opened');
         }
-    }
-
-    /**
-     * * Activate a Tab.
-     * @memberof Tab
-     */
-    activate () {
-        this.setState('active', true);
-        this.link.activate();
-    }
-
-    /**
-     * * Deactivate a Tab.
-     * @memberof Tab
-     */
-    deactivate () {
-        this.setState('active', false);
-        this.link.deactivate();
     }
 
     /**
@@ -140,55 +82,35 @@ export class Tab extends Class {
      * @memberof Tab
      */
     static generate (tabmenu) {
-        let tabs = [], htmls = document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`);
-        for (const key in htmls) {
-            if (htmls.hasOwnProperty(key)) {
-                const html = htmls[key];
-                let link = html.children[0];
-                for (const child of html.children) {
-                    if (child.classList.contains('tab-link') && child.classList.contains('tab-button')) {
-                        link = child;
-                    }
-                }
-                tabs.push(new this(this.generateProperties(key, link), this.generateState(html, tabmenu), tabmenu));
-            }
+        let tabs = [];
+        for (const html of document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`)) {
+            tabs.push(new this({
+                id: html.id,
+                target: html.id.split('tab-')[1],
+            }, {
+                open: html.classList.contains('opened'),
+            }, tabmenu));
         }
         return tabs;
     }
 
     /**
-     * * Generates the Tab properties.
      * @static
-     * @param {Number} key Tab key.
-     * @param {HTMLElement} link Tab Link HTML Element.
-     * @returns {object}
-     * @memberof Tab
+     * @var {object} props Default properties.
      */
-    static generateProperties (key, link) {
-        return {
-            id: `tab-${ key }`,
-            target: ((link.href.split('#').pop()) ? link.href.split('#').pop() : undefined),
-        };
-    }
-
+    static props = {
+        id: 'tab-1',
+        target: undefined,
+    };
+    
     /**
-     * * Generates the Tab state.
      * @static
-     * @param {HTMLElement} html Tab HTML Element.
-     * @param {TabMenu} tabmenu Tab TabMenu parent.
-     * @returns {object}
-     * @memberof Tab
+     * @var {object} state Default state.
      */
-    static generateState (html, tabmenu) {
-        return {
-            open: html.classList.contains('opened'),
-            active: tabmenu.state.active,
-        };
-    }
+    static state = {
+        open: false,
+    };
 }
-
-// ? Tab childs
-Tab.Link = Link;
 
 // ? Default export
 export default Tab;

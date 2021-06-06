@@ -1,15 +1,3 @@
-:root {
-    --tabmenu-title-color: #222;
-    --tabmenu-button-color: #222;
-    --tabmenu-button-color-alternative: #000;
-    --tabmenu-background-color: #fff;
-    --tabmenu-background-color-alternative: #ddd;
-    --tabmenu-border-color: #ddd;
-    --tabmenu-border-color-alternative: #ddd;
-    --tabmenu-icon-color: #ddd;
-    --tabmenu-icon-color-alternative: #ddd;
-}
-
 .tab-menu {
     display: flex;
     flex-wrap: wrap;
@@ -23,7 +11,7 @@
     position: relative;
     width: 100%;
     height: fit-content;
-    background-color: var(--tabmenu-background-color);
+    background-color: var(--tabmenu-background-color, #fff);
 }
     
 .tab-menu.horizontal .tabs .tab-menu-list {
@@ -32,9 +20,9 @@
 
 .tab-menu .tabs .tab-header {
     min-height: 4.6rem;
-    background-color: var(--tabmenu-background-color-alternative);
+    background-color: var(--tabmenu-background-color-alternative, #ddd);
     padding: 1rem;
-    color: var(--tabmenu-title-color);
+    color: var(--tabmenu-title-color, #222);
     line-height: 4.6rem;
 }
 
@@ -67,7 +55,6 @@
     min-width: fit-content;
 }
 
-.tab-menu .tabs .tab-menu-list .tab .tab-link,
 .tab-menu .tabs .tab-menu-list .tab .tab-button {
     display: flex;
     justify-content: space-between;
@@ -75,18 +62,16 @@
     flex-wrap: wrap;
     width: 100%;
     min-height: 4.6rem;
-    color: var(--tabmenu-button-color);
+    color: var(--tabmenu-button-color, #222);
     background-color: var(--tabmenu-background-color);
     padding: 1rem;
     text-decoration: none;
     transition: 500ms;
 }
 
-.tab-menu .tabs .tab-menu-list .tab .tab-link.active,
 .tab-menu .tabs .tab-menu-list .tab .tab-button.active,
-.tab-menu .tabs .tab-menu-list .tab .tab-link:hover,
 .tab-menu .tabs .tab-menu-list .tab .tab-button:hover {
-    color: var(--tabmenu-button-color-alternative);
+    color: var(--tabmenu-button-color-alternative, #000);
     background-color: var(--tabmenu-background-color-alternative);
 }
 
@@ -103,7 +88,7 @@
     display: block;
 }
 
-.tab-menu .tab-content-list .tab-content.closed {
+.tab-menu .tab-content-list .tab-content:not(.opened) {
     display: none;
 }
 

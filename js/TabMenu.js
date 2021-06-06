@@ -5,17 +5,6 @@ import Class from '../../JuanCruzAGB/js/Class.js';
 import Tab from './Tab.js';
 import Content from './Content.js';
 
-/** @var {object} defaultProps Default properties. */
-let defaultProps = {
-    id: 'tab-menu-1',
-};
-
-/** @var {object} defaultState Default state. */
-let defaultState = {
-    open: [],
-    active: undefined,
-};
-
 /**
  * * TabMenu makes an excellent tab menu.
  * @export
@@ -29,8 +18,7 @@ export class TabMenu extends Class {
      * @param {object} [props] TabMenu properties:
      * @param {string} [props.id='tabmenu-1'] TabMenu primary key.
      * @param {object} [state] TabMenu state:
-     * @param {string[]} [state.open=[]] TabMenu open tabs state.
-     * @param {string} [state.active=undefined] TabMenu active tab state.
+     * @param {string} [state.open=false] TabMenu tab opened.
      * @param {object} [callback] TabMenu click callback.
      * @param {function} [callback.function] TabMenu click callback function.
      * @param {object} [callback.params] TabMenu click callback params.
@@ -39,73 +27,17 @@ export class TabMenu extends Class {
     constructor (props = {
         id: 'tab-menu-1',
     }, state = {
-        open: [],
-        active: undefined,
+        open: false,
     }, callback = {
-        function: () => { /* console.log('Tab changed'); */ },
-        params: {
-            //
-    }}) {
-        super({ ...defaultProps, ...props }, { ...defaultState, ...state });
-        this.setCallbacks({
-            default: callback,
-        });
+        function: (params) => { /* console.log('Tab changed'); */ },
+        params: {}
+    }) {
+        super({ ...TabMenu.props, ...props }, { ...TabMenu.state, ...state });
+        this.setCallbacks({ default: { ...TabMenu.callback, ...callback } });
         this.setHTML(`#${ this.props.id }.tab-menu`);
         this.setContents();
         this.setTabs();
         this.checkState();
-    }
-
-    /**
-     * * Check the TabMenu state values.
-     * @memberof TabMenu
-     */
-    checkState () {
-        this.checkOpenState();
-        this.checkActiveState();
-    }
-
-    /**
-     * * Check the TabMenu open state.
-     * @memberof TabMenu
-     */
-    checkOpenState () {
-        if (this.state.open.length) {
-            for (const target of this.state.open) {
-                for (const tab of this.tabs) {
-                    if (tab.html.classList.contains('tab-button')) {
-                        if (tab.props.target === target) {
-                            tab.open();
-                        } else {
-                            tab.close();
-                        }
-                    }
-                }
-                for (const content of this.contents) {
-                    if (content.props.id === target) {
-                        content.open();
-                    } else {
-                        content.close();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * * Check the TabMenu state.
-     * @memberof TabMenu
-     */
-    checkActiveState () {
-        if (this.state.active) {
-            for (const tab of this.tabs) {
-                if (tab.link.getPathname() == this.state.active) {
-                    tab.activate();
-                } else {
-                    tab.deactivate();
-                }
-            }
-        }
     }
 
     /**
@@ -125,47 +57,90 @@ export class TabMenu extends Class {
     }
 
     /**
-     * * Open a Content.
-     * @param {object} [open=[]] TabMenu open tabs state.
+     * * Check the TabMenu state values.
      * @memberof TabMenu
      */
-    open (open = []) {
-        this.setState('open', open);
+    checkState () {
         this.checkOpenState();
     }
 
     /**
-     * * Close all the Contents and Tabs.
+     * * Check the TabMenu Contents open state.
      * @memberof TabMenu
      */
-    closeAll () {
-        for (const tab of this.tabs) {
-            tab.close();
-        }
+    checkContentOpenState () {
         for (const content of this.contents) {
-            content.close();
-        }
-    }
-
-    /**
-     * * Execute the TabMenu click function.
-     * @param {string} id Tab clicked target.
-     * @memberof TabMenu
-     */
-    execute (id) {
-        for (const content of this.contents) {
-            if (id == content.props.id || content.checkSection(id)) {
-                this.setState('open', [content.props.id]);
-                this.checkOpenState();
+            if (content.props.id === this.state.open) {
                 content.open();
             } else {
                 content.close();
             }
         }
-        this.callbacks.default.function({
-            ...this.callbacks.default.params,
-            tabmenu: this,
+    }
+
+    /**
+     * * Check the TabMenu open state.
+     * @memberof TabMenu
+     */
+    checkOpenState () {
+        if (this.state.open) {
+            this.open(this.state.open);
+        }
+    }
+
+    /**
+     * * Check the TabMenu Tabs open state.
+     * @memberof TabMenu
+     */
+    checkTabOpenState () {
+        for (const tab of this.tabs) {
+            if (tab.props.target === this.state.open) {
+                tab.open();
+            } else {
+                tab.close();
+            }
+        }
+    }
+
+    /**
+     * * Open a Content.
+     * @param {string} target Tab target.
+     * @param {object} [params] Params to send to the function.
+     * @memberof TabMenu
+     */
+    open (target, params = {}) {
+        this.setState('open', target);
+        this.checkTabOpenState();
+        this.checkContentOpenState();
+        this.execute('default', {
+            ...params,
+            TabMenuJS: this,
         });
+    }
+
+    /**
+     * @static
+     * @var {object} props Default properties.
+     */
+    static props = {
+        id: 'tab-menu-1',
+    }
+    
+    /**
+     * @static
+     * @var {object} state Default state.
+     */
+    static state = {
+        open: false,
+    }
+    
+    /**
+     * @static
+     * @var {object} callback Default callback.
+     */
+    static callback = {
+        function: (params) => { /* console.log('Tab changed'); */ },
+        params: {}
     }
 }
 
