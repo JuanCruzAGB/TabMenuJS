@@ -115,6 +115,7 @@ export class TabMenu extends Class {
         this.execute('default', {
             ...params,
             TabMenuJS: this,
+            opened: target,
         });
     }
 
