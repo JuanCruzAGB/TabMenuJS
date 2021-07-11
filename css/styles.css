@@ -20,7 +20,6 @@
 
 .tab-menu .tabs .tab-header {
     min-height: 4.6rem;
-    background-color: var(--tabmenu-background-color-alternative, #ddd);
     padding: 1rem;
     color: var(--tabmenu-title-color, #222);
     line-height: 4.6rem;
@@ -63,16 +62,17 @@
     width: 100%;
     min-height: 4.6rem;
     color: var(--tabmenu-button-color, #222);
-    background-color: var(--tabmenu-background-color);
+    background: var(--tabmenu-background-color);
     padding: 1rem;
     text-decoration: none;
     transition: 500ms;
 }
 
+.tab-menu .tabs .tab-menu-list .tab.opened .tab-button,
 .tab-menu .tabs .tab-menu-list .tab .tab-button.active,
 .tab-menu .tabs .tab-menu-list .tab .tab-button:hover {
     color: var(--tabmenu-button-color-alternative, #000);
-    background-color: var(--tabmenu-background-color-alternative);
+    background: var(--tabmenu-background-color-alternative);
 }
 
 .tab-menu .tabs .tab-menu-list .tab .tab-button .link-text {
