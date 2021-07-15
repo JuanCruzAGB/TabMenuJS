@@ -54,7 +54,7 @@
     min-width: fit-content;
 }
 
-.tab-menu .tabs .tab-menu-list .tab .tab-button {
+.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -68,14 +68,14 @@
     transition: 500ms;
 }
 
-.tab-menu .tabs .tab-menu-list .tab.opened .tab-button,
-.tab-menu .tabs .tab-menu-list .tab .tab-button.active,
-.tab-menu .tabs .tab-menu-list .tab .tab-button:hover {
+.tab-menu .tabs .tab-menu-list .tab.opened :where(.tab-button, .tab-link),
+.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link).active,
+.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link):hover {
     color: var(--tabmenu-button-color-alternative, #000);
     background: var(--tabmenu-background-color-alternative);
 }
 
-.tab-menu .tabs .tab-menu-list .tab .tab-button .link-text {
+.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link) .link-text {
     width: fit-content;
     height: fit-content;
 }

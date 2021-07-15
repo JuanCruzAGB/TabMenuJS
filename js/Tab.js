@@ -14,6 +14,7 @@ export class Tab extends Class {
      * @param {object} [props] Tab properties:
      * @param {string} [props.id='tab-1'] Tab primary key.
      * @param {string} [props.target=undefined] Tab target.
+     * @param {string} [props.type='button'] Tab type.
      * @param {object} [state] Tab state:
      * @param {boolean} [state.open=false] Tab open status.
      * @param {TabMenu} tabmenu TabMenu.
@@ -22,6 +23,7 @@ export class Tab extends Class {
     constructor (props = {
         id: 'tab-1',
         target: undefined,
+        type: "button",
     }, state = {
         open: false,
     }, tabmenu) {
@@ -53,10 +55,12 @@ export class Tab extends Class {
      * @memberof Tab
      */
     open () {
-        this.setState('open', true);
-        this.html.classList.add('opened');
-        for (const btn of this.buttons) {
-            btn.classList.add('opened');
+        if (this.props.type === 'button') {
+            this.setState('open', true);
+            this.html.classList.add('opened');
+            for (const btn of this.buttons) {
+                btn.classList.add('opened');
+            }
         }
     }
 
@@ -65,12 +69,14 @@ export class Tab extends Class {
      * @memberof Tab
      */
     close () {
-        this.setState('open', false);
-        if (this.html.classList.contains('opened')) {
-            this.html.classList.remove('opened');
-        }
-        for (const btn of this.buttons) {
-            btn.classList.remove('opened');
+        if (this.props.type === 'button') {
+            this.setState('open', false);
+            if (this.html.classList.contains('opened')) {
+                this.html.classList.remove('opened');
+            }
+            for (const btn of this.buttons) {
+                btn.classList.remove('opened');
+            }
         }
     }
 
@@ -84,9 +90,11 @@ export class Tab extends Class {
     static generate (tabmenu) {
         let tabs = [];
         for (const html of document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`)) {
+            console.log(html.querySelector(".tab-button"));
             tabs.push(new this({
                 id: html.id,
                 target: html.id.split('tab-')[1],
+                type: ((html.classList.contains("tab-button") || html.querySelector(".tab-button")) ? "button" : "link"),
             }, {
                 open: html.classList.contains('opened'),
             }, tabmenu));
@@ -101,6 +109,7 @@ export class Tab extends Class {
     static props = {
         id: 'tab-1',
         target: undefined,
+        type: "button",
     };
     
     /**
