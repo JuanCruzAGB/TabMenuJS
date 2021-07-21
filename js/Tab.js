@@ -90,7 +90,6 @@ export class Tab extends Class {
     static generate (tabmenu) {
         let tabs = [];
         for (const html of document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`)) {
-            console.log(html.querySelector(".tab-button"));
             tabs.push(new this({
                 id: html.id,
                 target: html.id.split('tab-')[1],
