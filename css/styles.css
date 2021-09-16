@@ -3,81 +3,65 @@
     flex-wrap: wrap;
 }
 
-.tab-menu.vertical {
-    min-height: 100vh;
+/* * Header */
+.tab-menu .tab-header {
+    flex-basis: 100%;
+    min-height: var(--tab-menu-height, 4.6rem);
+    background-color: var(--tab-menu-header-background-color, transparent);
+    color: var(--tab-menu-header-color, #222);
 }
 
+.tab-menu .tab-header picture {
+    width: 100vw;
+}
+
+.tab-menu .tab-header img {
+    width: 100vw;
+    height: var(--tab-menu-height, 4.6rem);
+    object-fit: contain;
+    object-position: center;
+}
+
+/* * Tabs */
 .tab-menu .tabs {
-    position: relative;
     width: 100%;
     height: fit-content;
-    background-color: var(--tabmenu-background-color, #fff);
+    background-color: var(--tab-menu-tabs-background-color, transparent);
+}
+
+.tab-menu .tabs :where(.tab-body, .tab-content, .tab-footer, .tab-menu-list) {
+    width: 100%;
 }
     
-.tab-menu.horizontal .tabs .tab-menu-list {
+.tab-menu:not(.vertical) .tabs .tab-content {
     overflow-x: auto;
 }
-
-.tab-menu .tabs .tab-header {
-    min-height: 4.6rem;
-    padding: 1rem;
-    color: var(--tabmenu-title-color, #222);
-    line-height: 4.6rem;
-}
-
-.tab-menu .tabs .tab-header.logo img {
-    width: 100%;
-    height: 4.6rem;
-    object-fit: contain;
-}
-
-.tab-menu .tabs .tab-header.logo h1 {
-    display: none;
-}
-
-.tab-menu .tabs .tab-footer {
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    justify-content: center;
-}
-
-.tab-menu .tabs .tab-menu-list {
-    width: 100%;
-}
     
-.tab-menu.horizontal .tabs .tab-menu-list {
+.tab-menu:not(.vertical) .tabs .tab-menu-list {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    /* flex-wrap: wrap; */
+    justify-content: flex-start;
     min-width: fit-content;
 }
 
 .tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link) {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-between;
     width: 100%;
-    min-height: 4.6rem;
-    color: var(--tabmenu-button-color, #222);
-    background: var(--tabmenu-background-color);
-    padding: 1rem;
+    min-height: var(--tab-menu-height, 4.6rem);
+    background-color: var(--tab-menu-button-background-color, transparent);
+    padding: var(--tab-menu-button-padding, 1rem);
+    color: var(--tab-menu-button-color, #222);
     text-decoration: none;
     transition: 500ms;
 }
 
 .tab-menu .tabs .tab-menu-list .tab.opened :where(.tab-button, .tab-link),
-.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link).active,
 .tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link):hover {
-    color: var(--tabmenu-button-color-alternative, #000);
-    background: var(--tabmenu-background-color-alternative);
-}
-
-.tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link) .link-text {
-    width: fit-content;
-    height: fit-content;
+    background-color: var(--tab-menu-button-background-color-alternative);
+    color: var(--tab-menu-button-color-alternative, #000);
 }
 
 .tab-menu .tab-content-list {
@@ -94,37 +78,62 @@
 
 /* ? MD */
 @media (min-width: 768px) {
-    .tab-menu.vertical .tabs {
-        width: 25%;
-        height: 100%;
+    .tab-menu.vertical :where(.tabs, .tab-content-list) {
+        width: var(--tab-menu-tabs-md-width, 25%);
+        min-height: calc(100vh - var(--tab-menu-height, 4.6rem));
+        max-height: calc(100vh - var(--tab-menu-height, 4.6rem));
+        overflow: auto;
     }
     
     .tab-menu.vertical .tab-content-list {
-        width: 75%;
-        max-height: 100vh;
-        overflow: auto;
-    }
-
-    .tab-menu .tabs .tab-footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
+        width: var(--tab-menu-content-md-width, 75%);
     }
 }
 
 /* ? LG */
 @media (min-width: 1024px) {
-    .tab-menu.horizontal .tabs {
-        padding: 0 10rem;
+    .tab-menu .tab-header img {
+        width: auto;
+    }
+
+    .tab-menu.vertical .tabs {
+        width: var(--tab-menu-tabs-lg-width, 25%);
+    }
+    
+    .tab-menu.vertical .tab-content-list {
+        width: var(--tab-menu-content-lg-width, 75%);
     }
 }
 
 /* ? XL */
 @media (min-width: 1200px) {
-    /**/
+    .tab-menu.vertical .tabs {
+        width: var(--tab-menu-tabs-xl-width, 25%);
+    }
+    
+    .tab-menu.vertical .tab-content-list {
+        width: var(--tab-menu-content-xl-width, 75%);
+    }
 }
 
 /* ? 2XL */
 @media (min-width: 1536px) {
-    /**/
+    .tab-menu.vertical .tabs {
+        width: var(--tab-menu-tabs-2xl-width, 25%);
+    }
+    
+    .tab-menu.vertical .tab-content-list {
+        width: var(--tab-menu-content-2xl-width, 75%);
+    }
+}
+
+/* ? 3XL */
+@media (min-width: 1920px) {
+    .tab-menu.vertical .tabs {
+        width: var(--tab-menu-tabs-3xl-width, 25%);
+    }
+    
+    .tab-menu.vertical .tab-content-list {
+        width: var(--tab-menu-content-3xl-width, 75%);
+    }
 }
