@@ -8,32 +8,26 @@ import Class from "../../JuanCruzAGB/js/Class.js";
  * @extends {Class}
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class Content extends Class {
+export default class Content extends Class {
     /**
      * * Creates an instance of Content.
-     * @param {object} [props] Content properties:
-     * @param {string} [props.id='content-1'] Content primary key.
-     * @param {object} [state] Content state:
-     * @param {boolean} [state.open=false] Content open status.
-     * @param {TabMenu} tabmenu Content TabMenu parent.
+     * @param {object} [data]
+     * @param {object} [data.props]
+     * @param {string} [data.props.id="content-1"] Content primary key.
+     * @param {object} [data.state]
+     * @param {boolean} [data.state.open=false] If the Content should be open.
+     * @param {HTMLElement} [data.html] Content HTML Element.
      * @memberof Content
      */
-    constructor (props = {
-        id: 'content-1',
-    }, state = {
-        open: false,
-    }, tabmenu) {
-        super({ ...Content.props, ...props }, { ...Content.state, ...state });
-        this.setHTML(`#${ tabmenu.props.id }.tab-menu .tab-content-list #${ this.props.id }.tab-content`);
-    }
-
-    /**
-     * * Open the Content.
-     * @memberof Content
-     */
-    open () {
-        this.setState('open', true);
-        this.html.classList.add('opened');
+    constructor (data = {
+        props: {
+            id: "content-1",
+        }, state: {
+            open: false,
+        }, html,
+    }) {
+        super({ ...Content.props, ...((data && data.hasOwnProperty("props")) ? data.props : {}) }, { ...Content.state, ...((data && data.hasOwnProperty("state")) ? data.state : {}) });
+        this.setHTML(data.html);
     }
 
     /**
@@ -41,25 +35,58 @@ export class Content extends Class {
      * @memberof Content
      */
     close () {
-        this.setState('open', false);
-        if (this.html.classList.contains('opened')) {
-            this.html.classList.remove('opened');
-        }
+        this.setState("open", false);
+        this.html.classList.remove("opened");
+    }
+
+    /**
+     * * Open the Content.
+     * @memberof Content
+     */
+    open () {
+        this.setState("open", true);
+        this.html.classList.add("opened");
     }
 
     /**
      * * Generates the TabMenu Content.
      * @static
-     * @param {TabMenu} tabmenu Content TabMenu parent.
+     * @param {TabMenu} TabMenu Content TabMenu parent.
      * @returns {Content[]}
      * @memberof Content
      */
-    static generate (tabmenu) {
+    static generate (TabMenu) {
         let contents = [];
-        for (const html of document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-content-list .tab-content`)) {
-           contents.push(new this({ id: html.id }, { open: html.classList.contains('opened') }, tabmenu));
+        let htmls = this.querySelector(TabMenu.props.id);
+        for (const key in htmls) {
+            if (Object.hasOwnProperty.call(htmls, key)) {
+                contents.push(new this({
+                    props: {
+                        id: (htmls[key].hasAttribute("id") ? htmls[key].id : `content-${ key }`),
+                    }, state: {
+                        open: htmls[key].classList.contains("open"),
+                    }, html: htmls[key],
+                }));
+            }
         }
         return contents;
+    }
+
+    /**
+     * * Returns all the TabMenu Contents HTMLElements.
+     * @static
+     * @param {string} id TabMenu primary key.
+     * @returns {HTMLElement[]}
+     * @memberof Content
+     */
+    static querySelector (id = false) {
+        if (id) {
+            return document.querySelectorAll(`#${ id }.tab-menu .tab-content-list .tab-content`);
+        }
+        if (!id) {
+            console.error("ID param is required to get the TabMenu Contents");
+            return [];
+        }
     }
 
     /**
@@ -67,8 +94,8 @@ export class Content extends Class {
      * @var {object} props Default properties.
      */
     static props = {
-        id: 'content-1',
-    };
+        id: "content-1",
+    }
     
     /**
      * @static
@@ -76,8 +103,5 @@ export class Content extends Class {
      */
     static state = {
         open: false,
-    };
+    }
 }
-
-// ? Default export
-export default Content;

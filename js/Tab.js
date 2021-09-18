@@ -8,59 +8,52 @@ import Class from "../../JuanCruzAGB/js/Class.js";
  * @extends {Class}
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class Tab extends Class {
+export default class Tab extends Class {
     /**
      * * Creates an instance of Tab.
-     * @param {object} [props] Tab properties:
-     * @param {string} [props.id='tab-1'] Tab primary key.
-     * @param {string} [props.target=undefined] Tab target.
-     * @param {string} [props.type='button'] Tab type.
-     * @param {object} [state] Tab state:
-     * @param {boolean} [state.open=false] Tab open status.
-     * @param {TabMenu} tabmenu TabMenu.
+     * @param {object} [data]
+     * @param {object} [data.props] Tab properties:
+     * @param {string} [data.props.id="tab-1"] Tab primary key.
+     * @param {string} [data.props.target=undefined] Tab target.
+     * @param {string} [data.props.type="button"] Tab type.
+     * @param {object} [data.state] Tab state:
+     * @param {boolean} [data.state.open=false] Tab open status.
+     * @param {HTMLElement} [data.html] Tab HTML Element.
+     * @param {TabMenu} [data.TabMenu] Tab TabMenu parent.
      * @memberof Tab
      */
-    constructor (props = {
-        id: 'tab-1',
-        target: undefined,
-        type: "button",
-    }, state = {
-        open: false,
-    }, tabmenu) {
-        super({ ...Tab.props, ...props }, { ...Tab.state, ...state });
-        this.setButtons(tabmenu);
-        this.setHTML(`#${ tabmenu.props.id }.tab-menu .tab-menu-list #tab-${ this.props.target }.tab`);
+    constructor (data = {
+        props: {
+            id: "tab-1",
+            target: false,
+            type: "button",
+        }, state: {
+            open: false,
+        }, html,
+        TabMenu,
+    }) {
+        super({ ...Tab.props, ...((data && data.hasOwnProperty("props")) ? data.props : {}) }, { ...Tab.state, ...((data && data.hasOwnProperty("state")) ? data.state : {}) });
+        this.setHTMLs([ data.html ], data.TabMenu);
     }
 
     /**
-     * * Set the Tab Link HTML Element.
-     * @param {TabMenu} tabmenu TabMenu.
+     * * Set the Tab HTML Elements.
+     * @param {HTMLElement[]} htmls
+     * @param {TabMenu} TabMenu Tab TabMenu parent.
      * @memberof Tab
      */
-    setButtons (tabmenu) {
-        let instance = this;
-        if (!this.buttons) {
-            this.buttons = [];
+    setHTMLs (htmls = [], TabMenu) {
+        if (!this.htmls) {
+            this.htmls = [];
         }
-        for (const btn of document.querySelectorAll(`a[href='#${ this.props.target }'].tab-button`)) {
-            this.buttons.push(btn);
-            btn.addEventListener('click', function (e) {
-                tabmenu.open(instance.props.target);
+        for (const html of htmls) {
+            btn.addEventListener("click", (e) => {
+                if (this.props.type == "button") {
+                    e.preventDefault();
+                }
+                TabMenu.open(this.props.target);
             })
-        }
-    }
-
-    /**
-     * * Open the Tab.
-     * @memberof Tab
-     */
-    open () {
-        if (this.props.type === 'button') {
-            this.setState('open', true);
-            this.html.classList.add('opened');
-            for (const btn of this.buttons) {
-                btn.classList.add('opened');
-            }
+            this.htmls.push(html);
         }
     }
 
@@ -69,36 +62,71 @@ export class Tab extends Class {
      * @memberof Tab
      */
     close () {
-        if (this.props.type === 'button') {
-            this.setState('open', false);
-            if (this.html.classList.contains('opened')) {
-                this.html.classList.remove('opened');
-            }
-            for (const btn of this.buttons) {
-                btn.classList.remove('opened');
-            }
-        }
+        this.setState("open", false);
+        this.html.classList.remove("opened");
+    }
+
+    /**
+     * * Open the Tab.
+     * @memberof Tab
+     */
+    open () {
+        this.setState("open", true);
+        btn.classList.add("opened");
     }
 
     /**
      * * Generates the TabMenu Tab.
      * @static
-     * @param {TabMenu} tabmenu Tab TabMenu parent.
+     * @param {TabMenu} TabMenu Tab TabMenu parent.
      * @returns {Tab[]}
      * @memberof Tab
      */
-    static generate (tabmenu) {
+    static generate (TabMenu) {
         let tabs = [];
-        for (const html of document.querySelectorAll(`#${ tabmenu.props.id }.tab-menu .tab-menu-list .tab`)) {
-            tabs.push(new this({
-                id: html.id,
-                target: html.id.split('tab-')[1],
-                type: ((html.classList.contains("tab-button") || html.querySelector(".tab-button")) ? "button" : "link"),
-            }, {
-                open: html.classList.contains('opened'),
-            }, tabmenu));
+        let htmls = this.querySelector(TabMenu.props.id);
+        for (const key in htmls) {
+            if (Object.hasOwnProperty.call(htmls, key)) {
+                let found = false;
+                for (const tab of tabs) {
+                    if (tab.props.target && tab.props.target == (htmls[key].hasAttribute("href") ? htmls[key].href.split("#").pop().split("?").shift() : false)) {
+                        tab.setHTMLs([htmls[key]], TabMenu);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    tabs.push(new this({
+                        props: {
+                            id: (htmls[key].hasAttribute("id") ? htmls[key].id : `tab-${ key }`),
+                            target: (htmls[key].hasAttribute("href") ? htmls[key].href.split("#").pop().split("?").shift() : false),
+                            type: (htmls[key].classList.contains("tab-button") ? "button" : "link"),
+                        }, state: {
+                            open: html.classList.contains("opened"),
+                        }, html: htmls[key],
+                        TabMenu: TabMenu,
+                    }));
+                }
+            }
         }
         return tabs;
+    }
+
+    /**
+     * * Returns all the TabMenu Tabs HTMLElements.
+     * @static
+     * @param {string} id TabMenu primary key.
+     * @returns {HTMLElement[]}
+     * @memberof Tab
+     */
+    static querySelector (id = false) {
+        if (id) {
+            return document.querySelectorAll(`.${ id }.tab`);
+        }
+        if (!id) {
+            console.error("ID param is required to get the TabMenu Tabs");
+            return [];
+        }
     }
 
     /**
@@ -106,10 +134,10 @@ export class Tab extends Class {
      * @var {object} props Default properties.
      */
     static props = {
-        id: 'tab-1',
-        target: undefined,
+        id: "tab-1",
+        target: false,
         type: "button",
-    };
+    }
     
     /**
      * @static
@@ -117,8 +145,5 @@ export class Tab extends Class {
      */
     static state = {
         open: false,
-    };
+    }
 }
-
-// ? Default export
-export default Tab;

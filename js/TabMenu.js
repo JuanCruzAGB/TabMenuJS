@@ -1,9 +1,9 @@
 // ? JuanCruzAGB repository
-import Class from '../../JuanCruzAGB/js/Class.js';
+import Class from "../../JuanCruzAGB/js/Class.js";
 
 // ? TabMenuJS repository
-import Tab from './Tab.js';
-import Content from './Content.js';
+import Content from "./Content.js";
+import Tab from "./Tab.js";
 
 /**
  * * TabMenu makes an excellent tab menu.
@@ -12,28 +12,40 @@ import Content from './Content.js';
  * @extends {Class}
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class TabMenu extends Class {
+export default class TabMenu extends Class {
     /**
      * * Creates an instance of TabMenu.
-     * @param {object} [props] TabMenu properties:
-     * @param {string} [props.id='tabmenu-1'] TabMenu primary key.
-     * @param {object} [state] TabMenu state:
-     * @param {string} [state.open=false] TabMenu tab opened.
-     * @param {object} [callback] TabMenu click callback.
-     * @param {function} [callback.function] TabMenu click callback function.
-     * @param {object} [callback.params] TabMenu click callback params.
+     * @param {object} [data]
+     * @param {object} [data.props]
+     * @param {string} [data.props.id="tabmenu-1"] TabMenu primary key.
+     * @param {object} [data.state]
+     * @param {string} [data.state.open=false] If a TabMenu Tab should be opened.
+     * @param {object} [data.callbacks]
+     * @param {object} [data.callbacks.close]
+     * @param {function} [data.callbacks.close.function]
+     * @param {object} [data.callbacks.close.params]
+     * @param {object} [data.callbacks.open]
+     * @param {function} [data.callbacks.open.function]
+     * @param {object} [data.callbacks.open.params]
      * @memberof TabMenu
      */
-    constructor (props = {
-        id: 'tab-menu-1',
-    }, state = {
-        open: false,
-    }, callback = {
-        function: (params) => { /* console.log('Tab changed'); */ },
-        params: {}
+    constructor (data = {
+        props: {
+            id: "tab-menu-1",
+        }, state: {
+            open: false,
+        }, callbacks: {
+            close: {
+                function: (params) => { /* console.log("params"); */ },
+                params: {}
+            }, open: {
+                function: (params) => { /* console.log("params"); */ },
+                params: {}
+            },
+        },
     }) {
-        super({ ...TabMenu.props, ...props }, { ...TabMenu.state, ...state });
-        this.setCallbacks({ default: { ...TabMenu.callback, ...callback } });
+        super({ ...TabMenu.props, ...((data && data.hasOwnProperty("props")) ? data.props : {}) }, { ...TabMenu.state, ...((data && data.hasOwnProperty("state")) ? data.state : {}) });
+        this.setCallbacks({ ...TabMenu.callbacks, ...((data && data.hasOwnProperty("callbacks")) ? data.callbacks : {}) });
         this.setHTML(`#${ this.props.id }.tab-menu`);
         this.setContents();
         this.setTabs();
@@ -56,26 +68,41 @@ export class TabMenu extends Class {
         this.tabs = Tab.generate(this);
     }
 
+    getSection (target = false) {
+        if (target) {
+            let found = false;
+            for (const content of this.contents) {
+                if (content.props.id == target) {
+                    if (!found) {
+                        found = {};
+                    }
+                    found.content = content;
+                    break;
+                }
+            }
+            for (const tab of this.tabs) {
+                if (tab.props.id == target) {
+                    if (!found) {
+                        found = {};
+                    }
+                    found.tab = tab;
+                    break;
+                }
+            }
+            return found;
+        }
+        if (!target) {
+            console.error("Target is required to get the TabMenu section");
+            return false;
+        }
+    }
+
     /**
      * * Check the TabMenu state values.
      * @memberof TabMenu
      */
     checkState () {
         this.checkOpenState();
-    }
-
-    /**
-     * * Check the TabMenu Contents open state.
-     * @memberof TabMenu
-     */
-    checkContentOpenState () {
-        for (const content of this.contents) {
-            if (content.props.id === this.state.open) {
-                content.open();
-            } else {
-                content.close();
-            }
-        }
     }
 
     /**
@@ -89,34 +116,60 @@ export class TabMenu extends Class {
     }
 
     /**
-     * * Check the TabMenu Tabs open state.
+     * * Close the TabMenu Contents.
+     * @param {object} [params]
      * @memberof TabMenu
      */
-    checkTabOpenState () {
-        for (const tab of this.tabs) {
-            if (tab.props.target === this.state.open) {
-                tab.open();
-            } else {
-                tab.close();
-            }
+    close (params = {}) {
+        for (const content of this.contents) {
+            content.close();
         }
+        for (const tab of this.tabs) {
+            tab.close();
+        }
+        this.execute("close", {
+            ...params,
+            ...this.callbacks.close.params,
+            TabMenu: this,
+        });
     }
 
     /**
-     * * Open a Content.
-     * @param {string} target Tab target.
-     * @param {object} [params] Params to send to the function.
+     * * Open a TabMenu Content.
+     * @param {string} target Content target.
+     * @param {object} [params]
      * @memberof TabMenu
      */
-    open (target, params = {}) {
-        this.setState('open', target);
-        this.checkTabOpenState();
-        this.checkContentOpenState();
-        this.execute('default', {
-            ...params,
-            TabMenuJS: this,
-            opened: target,
-        });
+    open (target = false, params = {}) {
+        if (target) {
+            this.setState("open", target);
+            let found = this.getSection(this.state.open);
+            if (found) {
+                for (const content of this.contents) {
+                    content.close();
+                }
+                for (const tab of this.tabs) {
+                    tab.close();
+                }
+                if (found.content) {
+                    found.content.open();
+                }
+                if (found.tab) {
+                    found.tab.open();
+                }
+                this.execute("open", {
+                    ...params,
+                    ...this.callbacks.open.params,
+                    open: this.state.open,
+                    TabMenu: this,
+                });
+            }
+            return found;
+        }
+        if (!target) {
+            console.error("Target is required is open a TabMenu Content");
+            return false;
+        }
     }
 
     /**
@@ -124,7 +177,7 @@ export class TabMenu extends Class {
      * @var {object} props Default properties.
      */
     static props = {
-        id: 'tab-menu-1',
+        id: "tab-menu-1",
     }
     
     /**
@@ -137,17 +190,27 @@ export class TabMenu extends Class {
     
     /**
      * @static
-     * @var {object} callback Default callback.
+     * @var {object} callbacks Default callbacks.
      */
-    static callback = {
-        function: (params) => { /* console.log('Tab changed'); */ },
-        params: {}
+    static callbacks = {
+        close: {
+            function: (params) => { /* console.log("params"); */ },
+            params: {}
+        }, open: {
+            function: (params) => { /* console.log("params"); */ },
+            params: {}
+        },
     }
+
+    /** 
+     * @static
+     * @var {Content} Content
+     */
+    static Content = Content
+
+    /** 
+     * @static
+     * @var {Tab} Tab
+     */
+    static Tab = Tab
 }
-
-// ? TabMenu childs
-TabMenu.Tab = Tab;
-TabMenu.Content = Content;
-
-// ? Default export
-export default TabMenu;
