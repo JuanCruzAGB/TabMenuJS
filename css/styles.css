@@ -19,7 +19,7 @@
     width: 100vw;
     height: var(--tab-menu-height, 4.6rem);
     object-fit: contain;
-    object-position: center;
+    object-position: top center;
 }
 
 /* * Tabs */
@@ -60,8 +60,8 @@
 
 .tab-menu .tabs .tab-menu-list .tab.opened :where(.tab-button, .tab-link),
 .tab-menu .tabs .tab-menu-list .tab :where(.tab-button, .tab-link):hover {
-    background-color: var(--tab-menu-button-background-color-alternative);
-    color: var(--tab-menu-button-color-alternative, #000);
+    background-color: var(--tab-menu-button-background-color-alt);
+    color: var(--tab-menu-button-color-alt, #000);
 }
 
 .tab-menu .tab-content-list {
@@ -81,7 +81,7 @@
     .tab-menu.vertical :where(.tabs, .tab-content-list) {
         width: var(--tab-menu-tabs-md-width, 25%);
         min-height: calc(100vh - var(--tab-menu-height, 4.6rem));
-        max-height: calc(100vh - var(--tab-menu-height, 4.6rem));
+        /* max-height: calc(100vh - var(--tab-menu-height, 4.6rem)); */
         overflow: auto;
     }
     

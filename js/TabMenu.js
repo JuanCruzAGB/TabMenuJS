@@ -81,7 +81,7 @@ export default class TabMenu extends Class {
                 }
             }
             for (const tab of this.tabs) {
-                if (tab.props.id == target) {
+                if (tab.props.target == target) {
                     if (!found) {
                         found = {};
                     }
@@ -160,7 +160,9 @@ export default class TabMenu extends Class {
                 this.execute("open", {
                     ...params,
                     ...this.callbacks.open.params,
+                    Content: found.content,
                     open: this.state.open,
+                    Tab: found.tab,
                     TabMenu: this,
                 });
             }
