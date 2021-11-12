@@ -6,7 +6,7 @@ import Class from '../../JuanCruzAGB/js/Class.js';
  * @export
  * @class Tab
  * @extends {Class}
- * @author Juan Cruz Armentia <juancarmentia@gmail.com>
+ * @author Juan Cruz Armentia <juan.cruz.armentia@gmail.com>
  */
 export default class Tab extends Class {
     /**
@@ -32,7 +32,15 @@ export default class Tab extends Class {
         }, html,
         TabMenu,
     }) {
-        super({ ...Tab.props, ...((data && data.hasOwnProperty('props')) ? data.props : {}) }, { ...Tab.state, ...((data && data.hasOwnProperty('state')) ? data.state : {}) });
+        super({
+            props: {
+                ...Tab.props,
+                ...(data && data.hasOwnProperty("props")) ? data.props : {},
+            }, state: {
+                ...Tab.state,
+                ...(data && data.hasOwnProperty("state")) ? data.state : {},
+            },
+        });
         this.setHTMLs([ data.html ], data.TabMenu);
     }
 

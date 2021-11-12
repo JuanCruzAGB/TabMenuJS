@@ -10,7 +10,7 @@ import Tab from "./Tab.js";
  * @export
  * @class TabMenu
  * @extends {Class}
- * @author Juan Cruz Armentia <juancarmentia@gmail.com>
+ * @author Juan Cruz Armentia <juan.cruz.armentia@gmail.com>
  */
 export default class TabMenu extends Class {
     /**
@@ -44,7 +44,15 @@ export default class TabMenu extends Class {
             },
         },
     }) {
-        super({ ...TabMenu.props, ...((data && data.hasOwnProperty("props")) ? data.props : {}) }, { ...TabMenu.state, ...((data && data.hasOwnProperty("state")) ? data.state : {}) });
+        super({
+            props: {
+                ...TabMenu.props,
+                ...(data && data.hasOwnProperty("props")) ? data.props : {},
+            }, state: {
+                ...TabMenu.state,
+                ...(data && data.hasOwnProperty("state")) ? data.state : {},
+            },
+        });
         this.setCallbacks({ ...TabMenu.callbacks, ...((data && data.hasOwnProperty("callbacks")) ? data.callbacks : {}) });
         this.setHTML(`#${ this.props.id }.tab-menu`);
         this.setContents();

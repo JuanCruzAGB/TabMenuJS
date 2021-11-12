@@ -6,7 +6,7 @@ import Class from "../../JuanCruzAGB/js/Class.js";
  * @export
  * @class Content
  * @extends {Class}
- * @author Juan Cruz Armentia <juancarmentia@gmail.com>
+ * @author Juan Cruz Armentia <juan.cruz.armentia@gmail.com>
  */
 export default class Content extends Class {
     /**
@@ -26,7 +26,15 @@ export default class Content extends Class {
             open: false,
         }, html,
     }) {
-        super({ ...Content.props, ...((data && data.hasOwnProperty("props")) ? data.props : {}) }, { ...Content.state, ...((data && data.hasOwnProperty("state")) ? data.state : {}) });
+        super({
+            props: {
+                ...Content.props,
+                ...(data && data.hasOwnProperty("props")) ? data.props : {},
+            }, state: {
+                ...Content.state,
+                ...(data && data.hasOwnProperty("state")) ? data.state : {},
+            },
+        });
         this.setHTML(data.html);
     }
 
